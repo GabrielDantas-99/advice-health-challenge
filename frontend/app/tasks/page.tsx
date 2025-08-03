@@ -1,9 +1,9 @@
 "use client"
 
-import { useAuth } from "@/contexts/AuthContext"
-import { Layout } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
+import Layout from "@/components/Layout"
 
 export default function TasksPage() {
     const { isAuthenticated, isLoading } = useAuth()
@@ -14,6 +14,21 @@ export default function TasksPage() {
             router.push("/login")
         }
     }, [isAuthenticated, isLoading, router])
+
+    if (isLoading) {
+        return (
+            <Layout>
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange"></div>
+                </div>
+            </Layout>
+        )
+    }
+
+    if (!isAuthenticated) {
+        return null
+    }
+
     return (
         <Layout>
             <p>Tasks</p>

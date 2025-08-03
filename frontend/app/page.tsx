@@ -1,7 +1,10 @@
+import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <Button>Shadcn Test</Button>
+    <Layout>
+      <Button>Shadcn Test</Button>
+    </Layout>
   );
 }

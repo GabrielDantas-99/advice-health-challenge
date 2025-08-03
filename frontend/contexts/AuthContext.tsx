@@ -4,16 +4,8 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { User, LoginDTO, RegisterDTO } from "@/models/User"
 import { authService } from "@/services/AuthService"
-import { toast } from "sonner"
-
-interface AuthContextType {
-    user: User | null
-    isLoading: boolean
-    isAuthenticated: boolean
-    login: (credentials: LoginDTO) => Promise<boolean>
-    register: (userData: RegisterDTO) => Promise<boolean>
-    logout: () => void
-}
+import { useToast } from "./ToastContext"
+import { AuthContextType } from "@/interfaces/AuthContextType"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -32,6 +24,8 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
     const [isLoading, setIsLoading] = useState(true)
+    const { showToast } = useToast()
+
     const isAuthenticated = authService.isAuthenticated()
 
     useEffect(() => {
@@ -63,11 +57,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 setUser(response.user)
             }
 
-            toast("Login realizado com sucesso!")
+            showToast("Login realizado com sucesso!", "success")
             return true
         } catch (error: any) {
             const message = error.response?.data?.detail || "Erro ao fazer login"
-            toast(message)
+            showToast(message, "error")
             return false
         } finally {
             setIsLoading(false)
@@ -78,11 +72,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             setIsLoading(true)
             await authService.register(userData)
-            toast("Usuário cadastrado com sucesso!")
+            showToast("Usuário cadastrado com sucesso!", "success")
             return true
         } catch (error: any) {
             const message = error.response?.data?.message || "Erro ao cadastrar usuário"
-            toast(message)
+            showToast(message, "error")
             return false
         } finally {
             setIsLoading(false)
@@ -92,7 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const logout = () => {
         authService.logout()
         setUser(null)
-        toast("Logout realizado com sucesso!")
+        showToast("Logout realizado com sucesso!", "success")
     }
 
     const value: AuthContextType = {
