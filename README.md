@@ -4,6 +4,38 @@
 
 Desenvolver uma aplicação web de gerenciamento de tarefas (To-Do List) com funcionalidades avançadas. O foco está na qualidade do código, boas práticas de desenvolvimento e arquitetura, além da entrega de um produto funcional.
 
+### Imagens:
+
+<table>
+  <thead>
+    <th>
+      Cadastrar
+    </th>
+    <th>
+      Home
+    </th>
+    <th>
+      Login
+    </th>
+    <th>
+      Formulario de Cadastro
+    </th>
+    <th>
+      Lista de Tarefas
+    </th>
+    <th>
+      Tarefas
+    </th>
+  </thead>
+  <tbody>
+    <td><img style="width: 300px" src="./docs/cadastrar.png" alt="Cadastrar" width="100%"></td>
+    <td><img style="width: 300px" src="./docs/home.png" alt="Home" width="100%"></td>
+    <td><img style="width: 300px" src="./docs/task-form.png" alt="Formulario de Tarefa" width="100%"></td>
+    <td><img style="width: 300px" src="./docs/task-list.png" alt="Lista de Tarefa" width="100%"></td>
+    <td><img style="width: 300px" src="./docs/tasks.png" alt="Tarefas" width="100%"></td>
+  </tbody>
+</table>
+
 ### 📝 Requisitos
 
 #### Funcionalidades Obrigatórias (20 pontos)
@@ -40,9 +72,7 @@ docker-compose up --build
 ```
 
 - Backend: http://localhost:8000/
-
 - Frontend: http://localhost:3000/
-
 - Admin (Django): http://localhost:8000/admin/
 
 ### Executar Localmente (sem Docker)
