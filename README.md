@@ -30,6 +30,7 @@ Desenvolver uma aplicação web de gerenciamento de tarefas (To-Do List) com fun
   <tbody>
     <td><img style="width: 300px" src="./docs/cadastrar.png" alt="Cadastrar" width="100%"></td>
     <td><img style="width: 300px" src="./docs/home.png" alt="Home" width="100%"></td>
+    <td><img style="width: 300px" src="./docs/login.png" alt="Home" width="100%"></td>
     <td><img style="width: 300px" src="./docs/task-form.png" alt="Formulario de Tarefa" width="100%"></td>
     <td><img style="width: 300px" src="./docs/task-list.png" alt="Lista de Tarefa" width="100%"></td>
     <td><img style="width: 300px" src="./docs/tasks.png" alt="Tarefas" width="100%"></td>
