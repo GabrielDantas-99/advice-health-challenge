@@ -3,7 +3,7 @@
 ## Descrição do desafio
 
 - Clique em uma tarefa para poder edita-la.
-- As atividades estão ordenadas de acordo com seu prazo final.
+- As atividades estão ordenadas de acordo com seu prazo final e conclusão.
 - Atividades com o prazo excedido não podem ser concluídas
 
 ### Teste Prático

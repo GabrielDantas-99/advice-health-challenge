@@ -24,8 +24,9 @@ class TaskListCreate(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         return Task.objects.filter(author=user).order_by(
-        Coalesce('deadline', datetime.max)
-    )
+            'completed', 
+            Coalesce('deadline', datetime.max)  
+        )
     
     def perform_create(self, serializer):
         if serializer.is_valid():
