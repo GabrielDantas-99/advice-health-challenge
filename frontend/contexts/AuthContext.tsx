@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             showToast("Login realizado com sucesso!", "success")
             return true
         } catch (error: any) {
-            const message = error.response?.data?.detail || "Erro ao fazer login"
+            const message = "Erro ao fazer login"
             showToast(message, "error")
             return false
         } finally {

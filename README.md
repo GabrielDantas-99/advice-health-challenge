@@ -31,6 +31,6 @@ funcionalidades avançadas. A aplicação deve permitir que os usuários:
   - Django REST Framework: 3 Pontos ✅
 - Opcionais (10 Pontos):
   - Criação e gerenciamento de categorias para organizar as tarefas: 2 Pontos ✅
-  - Compartilhamento de tarefas com outros usuários: 2 Pontos
-  - Dockerizar a aplicação utilizando Docker e Docker Compose: 3 Pontos
+  - Compartilhamento de tarefas com outros usuários: 2 Pontos ✅
+  - Dockerizar a aplicação utilizando Docker e Docker Compose: 3 Pontos ✅
   - Escrever testes unitários com pytest para o back-end: 3 Pontos
