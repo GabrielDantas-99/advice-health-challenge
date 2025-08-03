@@ -27,7 +27,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete, i
 
     return (
         <div
-            className={`bg-white rounded-lg shadow-md p-4 border-l-4 transition-all duration-200 hover:shadow-lg ${task.completed ? "border-green-500 bg-green-50" : isOverdue ? "border-red-500" : "border-orange"
+            className={`overflow-x-hidden bg-white rounded-lg shadow-md p-4 border-l-4 transition-all duration-200 hover:shadow-lg ${task.completed ? "border-green-500 bg-green-50" : isOverdue ? "border-red-500" : "border-orange"
                 }`}
         >
             <div className="flex items-start justify-between mb-3">
@@ -39,8 +39,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete, i
                         disabled={isLoading}
                         className="w-5 h-5 text-orange focus:ring-orange border-gray-300 rounded"
                     />
-                    <div>
-                        <h3 className={`font-semibold ${task.completed ? "line-through text-gray-500" : "text-gray-900"}`}>
+                    <div className="block max-w-60">
+                        <h3 className={`font-semibold truncate max-w-full ${task.completed ? "line-through text-gray-500" : "text-gray-900"}`}>
                             {task.title}
                         </h3>
                         <span
@@ -62,7 +62,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete, i
             </div>
 
             {task.description && (
-                <p className={`text-sm mb-3 ${task.completed ? "text-gray-400" : "text-gray-600"}`}>{task.description}</p>
+                <p className={`text-sm mb-3 truncate  ${task.completed ? "text-gray-400" : "text-gray-600"}`}>{task.description}</p>
             )}
 
             <div className="flex justify-between items-center text-xs text-gray-500">

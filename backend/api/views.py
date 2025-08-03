@@ -8,6 +8,8 @@ from .models import Task
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from django.db.models.functions import Coalesce
+from datetime import datetime
 
 # Create your views here.
 class CreateUserView(generics.CreateAPIView):
@@ -21,7 +23,9 @@ class TaskListCreate(generics.ListCreateAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        return Task.objects.filter(author=user)
+        return Task.objects.filter(author=user).order_by(
+        Coalesce('deadline', datetime.max)
+    )
     
     def perform_create(self, serializer):
         if serializer.is_valid():

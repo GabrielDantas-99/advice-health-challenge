@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useToast } from "@/contexts/ToastContext"
 import TaskForm from "./TaskForm"
 import { CreateTaskDTO, Task } from "@/models/Task"
@@ -9,6 +9,8 @@ import { Button } from "./ui/button"
 import { taskService } from "@/services/TaskService"
 import { ClipboardList } from "lucide-react"
 import TaskCard from "./TaskCard"
+import Pagination from "./Pagination"
+import TaskFilters from "./TaskFilters"
 
 const TaskList: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([])
@@ -17,6 +19,28 @@ const TaskList: React.FC = () => {
     const [showForm, setShowForm] = useState(false)
     const [filter, setFilter] = useState<"all" | "pending" | "completed">("all")
     const { showToast } = useToast()
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage, setItemsPerPage] = useState(6)
+
+    const [searchTerm, setSearchTerm] = useState("")
+    const [priorityFilter, setPriorityFilter] = useState("all")
+    const [statusFilter, setStatusFilter] = useState("all")
+
+    const filteredTasks = useMemo(() => {
+        return tasks.filter((task) => {
+            const matchesSearch =
+                task.title.toLowerCase().includes(searchTerm.toLowerCase())
+
+            const matchesPriority = priorityFilter === "all" || task.priority === Number(priorityFilter)
+
+            const matchesStatus =
+                statusFilter === "all" ||
+                (statusFilter === "completed" && task.completed) ||
+                (statusFilter === "pending" && !task.completed)
+
+            return matchesSearch && matchesPriority && matchesStatus
+        })
+    }, [tasks, searchTerm, priorityFilter, statusFilter])
 
     useEffect(() => {
         loadTasks()
@@ -71,16 +95,21 @@ const TaskList: React.FC = () => {
         }
     }
 
-    const filteredTasks = tasks.filter((task) => {
-        switch (filter) {
-            case "pending":
-                return !task.completed
-            case "completed":
-                return task.completed
-            default:
-                return true
-        }
-    })
+    const totalPages = Math.ceil(filteredTasks.length / itemsPerPage)
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
+    }
+
+    const handleItemsPerPageChange = (newItemsPerPage: number) => {
+        setItemsPerPage(newItemsPerPage)
+        setCurrentPage(1)
+    }
+
+    const paginatedTasks = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage
+        return filteredTasks.slice(startIndex, startIndex + itemsPerPage)
+    }, [filteredTasks, currentPage, itemsPerPage])
 
     if (isLoading) {
         return (
@@ -106,6 +135,14 @@ const TaskList: React.FC = () => {
                 <TaskForm onSubmit={handleCreateTask} onCancel={() => setShowForm(false)} isLoading={isSubmitting} />
             )}
 
+            <TaskFilters
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                priorityFilter={priorityFilter}
+                onPriorityFilterChange={setPriorityFilter}
+                statusFilter={statusFilter}
+                onStatusFilterChange={setStatusFilter}
+            />
             {/* Task List */}
             {filteredTasks.length === 0 ? (
                 <div className="text-center w-96 mx-auto py-12">
@@ -126,11 +163,22 @@ const TaskList: React.FC = () => {
                     </p>
                 </div>
             ) : (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {filteredTasks.map((task) => (
-                        <TaskCard key={task.id} task={task} onToggleComplete={handleToggleComplete} onDelete={handleDeleteTask} />
-                    ))}
-                </div>
+                <>
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {paginatedTasks.map((task) => (
+                            <TaskCard key={task.id} task={task} onToggleComplete={handleToggleComplete} onDelete={handleDeleteTask} />
+                        ))}
+                    </div>
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        itemsPerPage={itemsPerPage}
+                        totalItems={filteredTasks.length}
+                        onPageChange={handlePageChange}
+                        onItemsPerPageChange={handleItemsPerPageChange}
+                    />
+                </>
+
             )}
         </div>
     )
