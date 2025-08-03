@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import Layout from "@/components/Layout"
+import TaskList from "@/components/TaskList"
 
 export default function TasksPage() {
     const { isAuthenticated, isLoading } = useAuth()
@@ -25,13 +26,11 @@ export default function TasksPage() {
         )
     }
 
-    if (!isAuthenticated) {
-        return null
-    }
+    if (!isAuthenticated) return null
 
     return (
         <Layout>
-            <p>Tasks</p>
+            <TaskList />
         </Layout>
     )
 }
