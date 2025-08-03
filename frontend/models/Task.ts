@@ -22,10 +22,10 @@ export interface UpdateTaskDTO extends Partial<CreateTaskDTO> {
 }
 
 export enum TaskPriority {
-  LOW = 0,
-  MEDIUM = 1,
-  HIGH = 2,
-  URGENT = 3,
+  LOW = 1,
+  MEDIUM = 2,
+  HIGH = 3,
+  URGENT = 4,
 }
 
 export const getPriorityLabel = (priority: number): string => {
