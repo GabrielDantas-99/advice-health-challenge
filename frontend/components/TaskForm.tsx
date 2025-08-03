@@ -10,6 +10,9 @@ import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
 import validateForm from "@/validation/validateTaskForm"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { User } from "@/models/User"
+import { userService } from "@/services/UserService"
+import UserMultiSelect from "./UserMultiSelect"
 
 interface TaskFormProps {
     onSubmit: (taskData: CreateTaskDTO) => Promise<void>
@@ -25,7 +28,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, taskToEdit, isEditing, on
         description: taskToEdit?.description ?? "",
         deadline: taskToEdit?.deadline ?? "",
         priority: taskToEdit?.priority ?? TaskPriority.LOW,
+        shared_with: taskToEdit?.shared_with ?? [],
     })
+    const [allUsers, setAllUsers] = useState<User[]>([])
     const [errors, setErrors] = useState<Partial<CreateTaskDTO>>({})
 
     useEffect(() => {
@@ -35,8 +40,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, taskToEdit, isEditing, on
                 description: taskToEdit.description ?? "",
                 deadline: taskToEdit.deadline ? taskToEdit.deadline.slice(0, 16) : "",
                 priority: taskToEdit.priority,
+                shared_with: taskToEdit.shared_with ?? []
             })
         }
+        const getAllUsers = async () => {
+            try {
+                const users = await userService.getUsers()
+                setAllUsers(users)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getAllUsers()
     }, [taskToEdit])
 
     const handleValidateForm = (): boolean => {
@@ -59,6 +74,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, taskToEdit, isEditing, on
                 description: "",
                 deadline: "",
                 priority: TaskPriority.LOW,
+                shared_with: []
             })
         } catch (error) {
             console.error("Error submitting task:", error)
@@ -158,6 +174,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, taskToEdit, isEditing, on
                                 onChange={handleChange}
                             />
                         </div>
+                        <UserMultiSelect
+                            allUsers={allUsers}
+                            selectedUserIds={formData.shared_with}
+                            onChange={(updatedList) =>
+                                setFormData({ ...formData, shared_with: updatedList })
+                            }
+                        />
                     </div>
 
                     <div className="flex justify-end space-x-3 pt-4">

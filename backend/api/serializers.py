@@ -13,12 +13,16 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 class TaskSerializer(serializers.ModelSerializer):
+    shared_with = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=User.objects.all(), required=False
+    )
+
     class Meta:
         model = Task
-        fields = ['id', 'author', 'title', 'description', 'created_at', 'updated_at', 'completed', 'deadline', 'priority']
+        fields = [
+            'id', 'author', 'shared_with', 'title', 'description',
+            'created_at', 'updated_at', 'completed', 'deadline', 'priority'
+        ]
         extra_kwargs = {
             'author': {'read_only': True},
         }
-    
-    def create(self, validated_data):
-        return Task.objects.create(**validated_data)

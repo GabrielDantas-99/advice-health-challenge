@@ -8,6 +8,7 @@ export interface Task {
   completed: boolean;
   deadline?: string;
   priority: number;
+  shared_with: number[];
 }
 
 export interface CreateTaskDTO {
@@ -15,6 +16,7 @@ export interface CreateTaskDTO {
   description?: string;
   deadline?: string;
   priority: number;
+  shared_with: number[];
 }
 
 export interface UpdateTaskDTO extends Partial<CreateTaskDTO> {
