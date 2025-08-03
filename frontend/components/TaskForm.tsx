@@ -2,7 +2,7 @@
 
 import { CreateTaskDTO, TaskPriority } from "@/models/Task"
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
@@ -15,16 +15,29 @@ interface TaskFormProps {
     onSubmit: (taskData: CreateTaskDTO) => Promise<void>
     onCancel: () => void
     isLoading?: boolean
+    isEditing?: boolean
+    taskToEdit?: CreateTaskDTO & { id: number }
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, isLoading = false }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, taskToEdit, isEditing, onCancel, isLoading = false }) => {
     const [formData, setFormData] = useState<CreateTaskDTO>({
-        title: "",
-        description: "",
-        deadline: "",
-        priority: TaskPriority.LOW,
+        title: taskToEdit?.title ?? "",
+        description: taskToEdit?.description ?? "",
+        deadline: taskToEdit?.deadline ?? "",
+        priority: taskToEdit?.priority ?? TaskPriority.LOW,
     })
     const [errors, setErrors] = useState<Partial<CreateTaskDTO>>({})
+
+    useEffect(() => {
+        if (taskToEdit) {
+            setFormData({
+                title: taskToEdit.title,
+                description: taskToEdit.description ?? "",
+                deadline: taskToEdit.deadline ? taskToEdit.deadline.slice(0, 16) : "",
+                priority: taskToEdit.priority,
+            })
+        }
+    }, [taskToEdit])
 
     const handleValidateForm = (): boolean => {
         const newErrors = validateForm(formData)
@@ -155,12 +168,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onCancel, isLoading = fal
                         >
                             Cancelar
                         </Button>
-                        <Button
-                            type="submit"
-                            disabled={isLoading}
-                            variant="default"
-                        >
-                            {isLoading ? "Salvando..." : "Salvar Tarefa"}
+                        <Button type="submit" disabled={isLoading} variant="default">
+                            {isLoading ? (isEditing ? "Atualizando..." : "Salvando...") : isEditing ? "Atualizar" : "Salvar Tarefa"}
                         </Button>
                     </div>
                 </form>

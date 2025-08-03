@@ -6,7 +6,7 @@ import { useToast } from "@/contexts/ToastContext"
 import TaskForm from "./TaskForm"
 import { CreateTaskDTO, Task } from "@/models/Task"
 import { Button } from "./ui/button"
-import { taskService } from "@/services/TaskService"
+import { TaskService, taskService } from "@/services/TaskService"
 import { ClipboardList } from "lucide-react"
 import TaskCard from "./TaskCard"
 import Pagination from "./Pagination"
@@ -14,17 +14,22 @@ import TaskFilters from "./TaskFilters"
 
 const TaskList: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([])
+
     const [isLoading, setIsLoading] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [showForm, setShowForm] = useState(false)
-    const [filter, setFilter] = useState<"all" | "pending" | "completed">("all")
+
     const { showToast } = useToast()
+    const [filter, setFilter] = useState<"all" | "pending" | "completed">("all")
     const [currentPage, setCurrentPage] = useState(1)
     const [itemsPerPage, setItemsPerPage] = useState(6)
 
     const [searchTerm, setSearchTerm] = useState("")
     const [priorityFilter, setPriorityFilter] = useState("all")
     const [statusFilter, setStatusFilter] = useState("all")
+
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+    const [isEditing, setIsEditing] = useState(false)
 
     const filteredTasks = useMemo(() => {
         return tasks.filter((task) => {
@@ -83,6 +88,15 @@ const TaskList: React.FC = () => {
         }
     }
 
+    const handleUpdateTask = async (data: CreateTaskDTO) => {
+        if (!selectedTask) return
+        await taskService.updateTask(selectedTask.id, data)
+        await loadTasks()
+        setShowForm(false)
+        setSelectedTask(null)
+        setIsEditing(false)
+    }
+
     const handleDeleteTask = async (id: number) => {
         if (!confirm("Tem certeza que deseja excluir esta tarefa?")) return
 
@@ -132,7 +146,17 @@ const TaskList: React.FC = () => {
             </div>
 
             {showForm && (
-                <TaskForm onSubmit={handleCreateTask} onCancel={() => setShowForm(false)} isLoading={isSubmitting} />
+                <TaskForm
+                    onSubmit={isEditing ? handleUpdateTask : handleCreateTask}
+                    onCancel={() => {
+                        setShowForm(false)
+                        setSelectedTask(null)
+                        setIsEditing(false)
+                    }}
+                    isLoading={isSubmitting}
+                    isEditing={isEditing}
+                    taskToEdit={selectedTask ?? undefined}
+                />
             )}
 
             <TaskFilters
@@ -166,7 +190,18 @@ const TaskList: React.FC = () => {
                 <>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         {paginatedTasks.map((task) => (
-                            <TaskCard key={task.id} task={task} onToggleComplete={handleToggleComplete} onDelete={handleDeleteTask} />
+                            <TaskCard
+                                key={task.id}
+                                task={task}
+                                onToggleComplete={handleToggleComplete}
+                                onDelete={handleDeleteTask}
+                                onClick={(e) => {
+                                    if ((e.target as HTMLElement).closest("input, button, svg")) return
+                                    setSelectedTask(task)
+                                    setIsEditing(true)
+                                    setShowForm(true)
+                                }}
+                            />
                         ))}
                     </div>
                     <Pagination

@@ -2,6 +2,10 @@
 
 ## Descrição do desafio
 
+- Clique em uma tarefa para poder edita-la.
+- As atividades estão ordenadas de acordo com seu prazo final.
+- Atividades com o prazo excedido não podem ser concluídas
+
 ### Teste Prático
 
 O candidato terá 2 dias a partir do recebimento do teste para completar e enviar o projeto para o e-mail rh@advicehealth.com.br, com o link para acesso ao repositório. É necessário que:
@@ -18,7 +22,7 @@ Desenvolver uma aplicação web de gerenciamento de tarefas (To-Do List) com
 funcionalidades avançadas. A aplicação deve permitir que os usuários:
 
 - Obrigatórias (20 pontos):
-  - CRUD de Tarefas: 5 Pontos
+  - CRUD de Tarefas: 5 Pontos ✅
   - O usuário consiga criar uma conta e fazer login: 5 Pontos ✅
   - O usuário consiga marcar tarefas como concluídas ou não concluídas: 2 Pontos ✅
   - Filtragem de Tarefas: 1 Ponto ✅
@@ -26,7 +30,7 @@ funcionalidades avançadas. A aplicação deve permitir que os usuários:
   - Desenvolvido em React: 3 pontos ✅
   - Django REST Framework: 3 Pontos ✅
 - Opcionais (10 Pontos):
-  - Criação e gerenciamento de categorias para organizar as tarefas: 2 Pontos
+  - Criação e gerenciamento de categorias para organizar as tarefas: 2 Pontos ✅
   - Compartilhamento de tarefas com outros usuários: 2 Pontos
   - Dockerizar a aplicação utilizando Docker e Docker Compose: 3 Pontos
   - Escrever testes unitários com pytest para o back-end: 3 Pontos
